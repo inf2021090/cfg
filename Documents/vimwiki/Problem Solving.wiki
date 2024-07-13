@@ -1,0 +1,4 @@
+'''
+xprop | grep WM_CLASS
+
+this finds the name by clicking on an app useful for xmonad

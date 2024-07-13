@@ -1,0 +1,73 @@
+= My Desktop =
+
+== Window Manger ==
+* xmonad
+* dwm
+
+== Bar  ==
+* xmobar
+
+== File Mangers ==
+
+=== LF ===
+
+* Image Viewr 
+
+'''
+sudo apt-get install libfmt8 libopencv-core4.5d libopencv-imgcodecs4.5d libopencv-imgproc4.5d libopencv-videoio4.5d libspdlog1-fmt8 libtbb12 libvips42
+
+'''
+sudo apt install uuid-runtime
+
+=== VM ===
+
+To install QEMU and a graphical frontend like Virt-Manager on Pop!_OS, you can follow these steps. QEMU is a powerful virtualization software that allows you to run operating systems and virtual machines (VMs) on your host system. Virt-Manager provides a GUI interface to manage QEMU virtual machines.
+
+### Installing QEMU and Virt-Manager on Pop!_OS
+
+1. **Open Terminal**: You can open the terminal in Pop!_OS by pressing `Ctrl + Alt + T` or by searching for "Terminal" in the applications menu.
+
+2. **Update Package List**: First, update the package list to ensure you get the latest versions of software available in the repositories.
+   ```bash
+   sudo apt update
+   ```
+
+3. **Install QEMU**: QEMU is available in the default repositories. Install it using:
+   ```bash
+   sudo apt install qemu qemu-kvm
+   ```
+   This command installs QEMU and the KVM (Kernel-based Virtual Machine) components.
+
+4. **Install Virt-Manager**: Virt-Manager provides a graphical user interface to manage QEMU VMs.
+   ```bash
+   sudo apt install virt-manager
+   ```
+
+5. **Configure Libvirt (Optional)**: Libvirt is a toolkit to manage virtualization platforms. Virt-Manager uses libvirt to manage virtual machines. It's often installed automatically with `virt-manager`, but if it's not:
+   ```bash
+   sudo apt install libvirt-daemon-system libvirt-clients
+   ```
+   After installation, you may need to start and enable the `libvirtd` service:
+   ```bash
+   sudo systemctl start libvirtd
+   sudo systemctl enable libvirtd
+   ```
+   This ensures that `libvirtd` starts automatically at boot.
+
+6. **Add Your User to the Libvirt Group**: To allow your user account to manage virtual machines using Virt-Manager without using `sudo` every time:
+   ```bash
+   sudo usermod -aG libvirt $(whoami)
+   ```
+   Log out and log back in or restart your system for the group membership to take effect.
+
+7. **Launch Virt-Manager**: You can now launch Virt-Manager from the applications menu or by running:
+   ```bash
+   virt-manager
+   ```
+   This opens the graphical interface where you can create, manage, and run virtual machines using QEMU.
+
+### Verify Installation
+
+Once installed, you can verify QEMU and Virt-Manager are working correctly by launching Virt-Manager and attempting to create a new virtual machine. If everything is set up correctly, you should be able to create, start, and interact with virtual machines through the graphical interface.
+
+That's it! You now have QEMU and Virt-Manager installed on your Pop!_OS system, ready to create and manage virtual machines. Adjust any configurations or settings as needed based on your specific virtualization requirements.

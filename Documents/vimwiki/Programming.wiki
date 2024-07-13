@@ -1,0 +1,27 @@
+= Programming =
+
+== Languages ==
+
+'''txt
+python
+R
+javascript
+rust
+
+
+== IDE ==
+
+'''txt
+vs-codium
+
+== Software ==
+
+* decker engine
+
+'''shell
+sudo apt-get  install docker.io
+
+* docker
+
+'''
+

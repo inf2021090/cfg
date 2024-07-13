@@ -1,0 +1,6 @@
+= software =
+
+[[System]]
+[[Desktop]]
+[[Programming]]
+[[CLI]]

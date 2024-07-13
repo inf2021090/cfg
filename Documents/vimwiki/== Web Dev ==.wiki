@@ -1,0 +1,20 @@
+== Hugo ==
+
+* Documentation
+'''
+https://gohugo.io/
+
+* Install
+
+'''
+sudo snap install hugo
+
+or in Arch
+
+'''
+sudo pacman -S hugo
+
+* Notes
+
+1. hugo new site quickstart
+2. git submodule add <link> themes/<theme name>

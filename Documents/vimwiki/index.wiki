@@ -1,0 +1,5 @@
+= My Notes and Logs =
+
+[[System Setup]]
+[[Shell Commands]]
+[[Skills]]
