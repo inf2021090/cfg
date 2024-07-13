@@ -1,0 +1,33 @@
+#!/bin/zsh
+# LICENSE: PUBLIC DOMAIN
+
+current_layout() {
+    layout=$(setxkbmap -query | awk 'END{print $2}')
+    case $layout in
+        us) echo "US English" ;;
+        gr) echo "Greek" ;;
+        *) echo "Unknown Layout" ;;
+    esac
+}
+
+if [[ "$1" ]]; then
+    setxkbmap $1
+    notify-send -t 2000 "Keyboard Layout" "Switched to layout: $(current_layout)"
+else
+    layout=$(setxkbmap -query | awk 'END{print $2}')
+    case $layout in
+        us)
+            setxkbmap gr
+            notify-send -t 2000 "Keyboard Layout" "Switched to layout: Greek"
+            ;;
+        gr)
+            setxkbmap us
+            notify-send -t 2000 "Keyboard Layout" "Switched to layout: US English"
+            ;;
+        *)
+            setxkbmap us
+            notify-send -t 2000 "Keyboard Layout" "Switched to layout: US English"
+            ;;
+    esac
+fi
+
