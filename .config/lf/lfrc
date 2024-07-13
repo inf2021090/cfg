@@ -1,0 +1,25 @@
+set icons true
+#set sixel true
+
+# Set previewer to use lfub
+#set previewer = lfub
+
+# Define the preview command based on the preview script
+#preview {
+#    bash ~/.config/lf/preview "$FILENAME" "$LINES" "$COLS" "$X" "$Y"
+#}
+
+# Define the cleanup command using the cleaner script
+cleaner {
+    bash ~/.config/lf/cleaner
+}
+
+# Image preview using ueberzug
+#imgpreviewer sxiv
+
+# Video preview using mpv
+#previewer mpv --wid=$XID --geometry=+0+0 --autofit=800x600
+
+# Preview mode for images and videos
+#mime ^image,=imgpreview
+#mime ^video,=preview
