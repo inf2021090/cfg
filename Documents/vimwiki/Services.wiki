@@ -1,0 +1,48 @@
+== Docker ==
+
+The error message you're encountering indicates that `docker-ce-cli` is not available for installation via the package manager (`apt` in this case). This can happen for a few reasons:
+
+1. **Repository Configuration**: The repository from which `docker-ce-cli` is sourced may not be correctly configured or enabled on your system.
+
+2. **Package Availability**: Sometimes packages are temporarily unavailable due to maintenance or updates on the repository side.
+
+To troubleshoot this issue, here are some steps you can take:
+
+### 1. Check Repository Configuration
+
+Make sure that the Docker repository is correctly added to your system. Here’s how you can do it:
+
+```bash
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+```
+
+### 2. Verify Package Availability
+
+After updating the repositories, check if `docker-ce-cli` is available for installation:
+
+```bash
+sudo apt-cache policy docker-ce-cli
+```
+
+This command will show you the available versions and whether they are installable from any configured repositories.
+
+### 3. Use Docker Official Documentation
+
+If the package still doesn't appear, visit the [official Docker documentation](https://docs.docker.com/engine/install/ubuntu/) for Ubuntu installation instructions. They provide step-by-step guidance and any additional configuration required.
+
+### 4. Consider Docker Alternatives
+
+If Docker's official packages aren't available or suitable for your system, consider alternative methods for installing Docker, such as using Docker's own installation scripts or using Docker from the Snap Store (`sudo snap install docker`).
+
+### Summary
+
+The key steps involve ensuring your repository configurations are correct, checking package availability, and consulting official documentation for any specific requirements or changes in installation procedures. If you continue to encounter issues or have more questions, feel free to ask for further assistance!
