@@ -27,7 +27,7 @@ ow            # OTHER_WRITABLE
 st      t       # STICKY
 di      󰉋      # DIR
 pi      p       # FIFO
-so      s       # SOCK
+so      󰤅       # SOCK
 bd      b       # BLK
 cd      c       # CHR
 su      u       # SETUID
@@ -42,6 +42,7 @@ fi      󱁻      # FILE
 *.log           
 *.ipynb         
 *.styl          
+*.epub          
 *.sass          
 *.scss          
 *.htm           
@@ -210,7 +211,7 @@ fi      󱁻      # FILE
 *makefile               
 *cmakelists.txt         
 *robots.txt             󰚩
-
+*aliases                 🅰️
 # file names (case-sensitive adaptations)
 *Gruntfile.coffee       
 *Gruntfile.js           
