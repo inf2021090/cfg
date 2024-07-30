@@ -9,6 +9,9 @@ import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Actions.CopyWindow (kill1)
 
+import Data.Tree
+import qualified XMonad.Actions.TreeSelect as TS
+
 import XMonad.Layout.Spacing (spacingRaw, Border(..))
 import XMonad.Layout.Gaps (gaps, GapMessage(..), Direction2D(..))
 import XMonad.Layout.Gaps
@@ -89,11 +92,16 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_o     ), rofi_launcher)
 
     -- Launch side bar with Power Menu
-    , ((modm,		    xK_s     ), spawn "exec ~/.config/eww/powermenu")
+--    , ((modm,		    xK_s     ), spawn "exec ~/.config/eww/powermenu")
+     -- launch eww sidebar
+    , ((modm,               xK_s     ), sidebarlaunch)
+   , ((modm .|. shiftMask, xK_s     ), ewwclose)
     
-    
-    -- Add keybinding to switch keyboard layout with Shift + Alt
-    --, ((shiftMask .|. mod1Mask, xK_Alt_L), spawn "keyboard_layout_switch")
+	    -- Launch Tree Select
+    , ((modm, xK_f), treeselectAction tsThemeConfig)
+   
+    -- Switch keyboard layout with Shift + Alt
+    , ((shiftMask, xK_Alt_L), spawn "keyboard_layout_switch")
 
     -- Audio keys
     , ((0,                    xF86XK_AudioPlay), spawn "playerctl play-pause")
@@ -222,6 +230,12 @@ maimsave = spawn "maim -s ~/Desktop/$(date +%Y-%m-%d_%H-%M-%S).png && notify-sen
 rofi_launcher :: MonadIO m => m ()
 rofi_launcher = spawn "rofi -no-lazy-grab -show drun -modi run,drun,window -theme $HOME/.config/rofi/launcher/style -drun-icon-theme \"candy-icons\""
 
+sidebarlaunch :: MonadIO m => m ()
+sidebarlaunch = spawn "exec ~/bin/eww open-many weather_side time_side smol_calendar player_side sys_side sliders_side"
+
+ewwclose :: MonadIO m => m ()
+ewwclose = spawn "exec ~/bin/eww close-all"
+
 -- Layouts
 myLayout = avoidStruts $ smartBorders $ gaps [(D, 10)] $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True $ Tall 1 (3/100) (1/2) ||| Full
 
@@ -235,8 +249,8 @@ myEventHook = fullscreenEventHook
 myStartupHook :: X ()
 myStartupHook = do
     spawnOnce "setxkbmap -layout us -variant altgr-intl"
-    spawnOnce "feh --bg-scale ~/Pictures/Wallpapers/space.jpg"
-    spawnOnce "picom --experimental-backends --config ~/.config/picom/picom.conf"
+    spawnOnce "nitrogen --restore"
+    spawnOnce "picom --experimental-backends --config ~/.config/picom/picom.conf &"
     spawnOnce "nm-applet"
     spawnOnce "volumeicon"
     spawnOnce "blueman-applet"
@@ -279,7 +293,66 @@ myManageHook = composeAll
   , isFullscreen --> (doF W.focusDown <+> doFullFloat)
   ]
 
--- Main function
+treeselectAction :: TS.TSConfig (X ()) -> X()
+treeselectAction a = TS.treeselectAction a
+    [ Node (TS.TSNode "LibreOffice" "Launch LibreOffice applications" (return ()))
+        [ Node (TS.TSNode "Writer"    "Launch LibreOffice Writer"    (spawn "libreoffice --writer")) []
+        , Node (TS.TSNode "Calc"      "Launch LibreOffice Calc"      (spawn "libreoffice --calc")) []
+        , Node (TS.TSNode "Impress"   "Launch LibreOffice Impress"   (spawn "libreoffice --impress")) []
+        , Node (TS.TSNode "Draw"      "Launch LibreOffice Draw"      (spawn "libreoffice --draw")) []
+        , Node (TS.TSNode "Base"      "Launch LibreOffice Base"      (spawn "libreoffice --base")) []
+        , Node (TS.TSNode "Math"      "Launch LibreOffice Math"      (spawn "libreoffice --math")) []
+        ]
+    , Node (TS.TSNode "Development Tools" "Programs for development" (return ()))
+        [ Node (TS.TSNode "Sublime Text"    "Launch Sublime Text"    (spawn "subl")) []
+        , Node (TS.TSNode "Visual Studio Code" "Launch VS Code"      (spawn "codium")) []
+        , Node (TS.TSNode "JupyterLab" "Launch JupyterLab" (spawn "bash ~/.local/bin/launch_jupyterlab.sh")) []
+        , Node (TS.TSNode "Docker Desktop"  "Launch Docker Desktop"  (spawn "docker")) []
+        , Node (TS.TSNode "GitKraken"       "Launch GitKraken"       (spawn "gitkraken")) []
+        ]
+    , Node (TS.TSNode "System Utilities" "Common system utilities" (return ()))
+        [ Node (TS.TSNode "Terminal"         "Launch Terminal"           (spawn "xterm")) []
+        , Node (TS.TSNode "File Manager"     "Launch File Manager"       (spawn "thunar")) []
+        , Node (TS.TSNode "System Monitor"   "Launch System Monitor"     (spawn "gnome-system-monitor")) []
+        , Node (TS.TSNode "Settings"         "Open System Settings"      (spawn "gnome-control-center")) []
+        ]
+    ]
+
+tsThemeConfig :: TS.TSConfig a
+tsThemeConfig = TS.TSConfig
+    { TS.ts_hidechildren = True
+    , TS.ts_background   = 0x1c1f26 
+    , TS.ts_font         = "xft:FiraMono Nerd Font"
+    , TS.ts_node         = (0xff000000, 0xff4e79a7) 
+    , TS.ts_nodealt      = (0xff000000, 0xff4e79a7) 
+    , TS.ts_highlight    = (0xffffffff, 0xff8c6d7d) 
+    , TS.ts_extra        = 0xff000000 
+    , TS.ts_node_width   = 200
+    , TS.ts_node_height  = 30
+    , TS.ts_originX      = 0
+    , TS.ts_originY      = 0
+    , TS.ts_indent       = 80
+    , TS.ts_navigate     = myTreeNavigation
+    }
+
+myTreeNavigation = M.fromList
+    [ ((0, xK_Escape), TS.cancel)
+    , ((0, xK_Return), TS.select)
+    , ((0, xK_space),  TS.select)
+    , ((0, xK_Up),     TS.movePrev)
+    , ((0, xK_Down),   TS.moveNext)
+    , ((0, xK_Left),   TS.moveParent)
+    , ((0, xK_Right),  TS.moveChild)
+    , ((0, xK_k),      TS.movePrev)
+    , ((0, xK_j),      TS.moveNext)
+    , ((0, xK_h),      TS.moveParent)
+    , ((0, xK_l),      TS.moveChild)
+    , ((0, xK_o),      TS.moveHistBack)
+    , ((0, xK_i),      TS.moveHistForward)
+    ]
+
+
+-- Main function 
 main = do
     xmproc <- spawnPipe "xmobar -x 0 $HOME/.config/xmobar/xmobarrc"  -- Launch xmobar
     xmonad $ docks $ ewmh def
